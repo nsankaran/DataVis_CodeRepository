@@ -23,10 +23,6 @@ int ltot;
 int lplot;
 int min_idx1;
 int min_idx2;
-//float[] z1; // to store values
-//float[] z2; // to store values
-//int diffi;
-//int diffj;
 int gridDim = 151;
 int gridSize = 650;
 float[][] values1;
@@ -315,9 +311,6 @@ void draw() {
   //directionalLight(250, 250, 250, 0, -0.7, -0.7);
   lights();
   counter++;
-  //if (record) {
-  //beginRaw(DXF,"fibroblast_ipSC_KEGG_deltathresh_6.dxf");
-  //}
   fill(0);
   text(header[2], width*5/24, height/10);
   text(header[3], width*12/24, height/10);
