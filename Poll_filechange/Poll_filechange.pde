@@ -5,9 +5,11 @@
 import java.util.*;
 import java.io.*;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Cell; 
 import org.gicentre.utils.stat.*;        // For chart classes.
 
 String[][] xlsData;
+int[][] dataType;
 String path;
 int l;
 
@@ -31,7 +33,7 @@ void fileSelected(File selection) {
     TimerTask task = new FileWatcher( new File(path));
     // create timer
     Timer timer = new Timer();
-    timer.schedule( task, new Date(), 10 );
+    timer.schedule( task, new Date(), 10 ); // check every 10ms
 
     loadData();
   }
@@ -39,7 +41,7 @@ void fileSelected(File selection) {
 
 void loadData() {
   xlsData = importExcel(path);
-  barChart = drawBarChart(xlsData);
+  barChart = drawBarChart(xlsData); //<>//
   redraw();
 
   //for debugging purposes only

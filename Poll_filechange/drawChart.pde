@@ -1,4 +1,4 @@
- //<>//
+
 PFont titleFont, smallFont;
 BarChart barChart = null;
 
