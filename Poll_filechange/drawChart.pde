@@ -13,9 +13,7 @@ BarChart drawBarChart(String[][] xlsData) {
   float[] values = new float[xlsData.length-1];
   String[] names= new String[xlsData.length-1];
 
-  // soon to create user options for defining text fields, headers etc.
-  // for now, just assume first row headers.
-  for (int i=1; i<xlsData.length; i++) {
+  for (int i=hdrFlag; i<xlsData.length; i++) {
     values[i-1] = Float.parseFloat(xlsData[i][1]);
     names[i-1] = xlsData[i][0];
   }
