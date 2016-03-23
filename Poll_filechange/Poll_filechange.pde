@@ -1,12 +1,12 @@
 // Allows the user to select an excel spreadsheet to load.
 // Each time the excel file is changed and saved, processing reloads the file and updates the sketch.
 
-
 import java.util.*;
 import java.io.*;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell; 
 import org.gicentre.utils.stat.*;        // For chart classes.
+import org.gicentre.utils.colour.*;
 
 String[][] xlsData;
 int[][] dataType;
@@ -18,24 +18,25 @@ InputStream inp=null;
 Workbook wb=null;
 int sizeX;
 int sizeY;
-int hdrFlag;
+int hdrFlag; // First row header flag (1,0)
+int lblFlag; // First column labels flag (1,0)
 int[] colType;
 int[] rowType;
 
-
 void setup() {
   selectInput("Select an excel file to process:", "fileSelected");
-  size(800, 300);
+  size(800, 800);
   smooth();
   noLoop();
-  fill(120);
+
 }
 
 void fileSelected(File selection) {
+  
   if (selection == null) {
     println("No file selected.");
   } else {
-    println("User selected " + selection.getAbsolutePath());
+    println("User selected:  " + selection.getAbsolutePath());
     path = selection.getAbsolutePath();
 
     // create new Timer task
@@ -48,85 +49,11 @@ void fileSelected(File selection) {
   }
 }
 
-void loadData() {
+void loadData() { // Data handling
 
-  // Step 1: get datatype of every cell and data value
   readExcel(path);
 
-  // Step 2: look for header in first row
-  int H1 = 0;
-  for (int j=0; j<sizeX; j++) {
-    if (dataType[j][0] == 1) {
-      H1 = H1+1;
-    } else {
-    }
-  }
 
-  if ((H1/sizeX) >=0.5) {
-    hdrFlag = 1;
-    println();
-    println("Found headers in row 1");
-  } else { 
-    hdrFlag = 0;
-  }
-
-  // Step 3: look for common data type in each column
-  colType = new int[sizeX]; 
-  for (int i=0; i<sizeX; i++) {
-    int[] Ccount = new int[sizeX];
-
-    for (int j=hdrFlag; j<sizeY; j++) {
-      if (dataType[i][j] == 0) {
-        Ccount[0] = Ccount[0]+1;
-      } else if (dataType[i][j] == 1) {        
-        Ccount[1] = Ccount[1]+1;
-      } else if (dataType[i][j] == 2) {        
-        Ccount[2] = Ccount[2]+1;
-      } else if (dataType[i][j] == 3) {       
-        Ccount[3] = Ccount[3]+1;
-      }
-    } // loop through rows
-
-
-    int largest = Ccount[0], index = 0;
-    for (int k=1; k<Ccount.length; k++) {
-      if (Ccount[k] > largest) {
-        largest = Ccount[k];
-        index = k;
-      }
-    }
-    colType[i] = index;
-  } // loop through columns
-
-  // Step 4: look for common data type in each row
-  rowType = new int[sizeY]; 
-  for (int i=0; i<sizeY; i++) {
-    int[] Ccount = new int[sizeX];
-
-    for (int j=0; j<sizeX; j++) {
-      if (dataType[j][i] == 0) {
-        Ccount[0] = Ccount[0]+1;
-      } else if (dataType[j][i] == 1) {        
-        Ccount[1] = Ccount[1]+1;
-      } else if (dataType[j][i] == 2) {        
-        Ccount[2] = Ccount[2]+1;
-      } else if (dataType[j][i] == 3) {       
-        Ccount[3] = Ccount[3]+1;
-      }
-    } // loop through rows
-
-
-    int largest = Ccount[0], index = 0;
-    for (int k=1; k<Ccount.length; k++) {
-      if (Ccount[k] > largest) {
-        largest = Ccount[k];
-        index = k;
-      }
-    }
-    rowType[i] = index;
-  } // loop through columns
-
-  // Step 4: Import data using above information
   //----------------
   // Assume data organized down columns (default).
   // for each column with numeric data, if header exists then create list of fields to plot.
@@ -136,13 +63,13 @@ void loadData() {
   // create 3 variables: 'Fields' , 'Labels' and 'Values' such that 
   // dims(Values) = [labels.length x fields.length]
 
-  xlsData = importExcel(path); //<>//
-  barChart = drawBarChart(xlsData);
+  //barChart = drawBarChart(xlsData);
+  lineChart = drawXYChart(xlsData);
   redraw();
 
   //for debugging purposes only
-  l = int(xlsData[xlsData.length-1][1]);
-  println(l);
+  //l = int(xlsData[xlsData.length-1][1]);
+  //println(l);
 } // end loadData()
 
 class FileWatcher extends TimerTask {
@@ -174,8 +101,12 @@ void draw() {
   background(255);
 
   if (barChart!= null) {
-    barChart.draw(10, 10, width-20, height-20);
+    barChart.draw(10, 10, width-20, height-20); 
     fill(120);
-  } else {
+  } 
+  if (lineChart != null) {
+    lineChart.draw(10, 10, width-20, height-20);
+    fill(120);
+
   }
 }
