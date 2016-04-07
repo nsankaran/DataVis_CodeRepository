@@ -43,7 +43,7 @@ BarChart drawBarChart(String[][] xlsData) {
 }
 
 // 2) Line Chart
-XYChart drawXYChart(String[][] xlsData) {
+XYChart drawXYChart(String[][] xlsData, int colNum) {
 
   titleFont = loadFont("Helvetica-22.vlw");
   smallFont = loadFont("Helvetica-12.vlw");
@@ -62,8 +62,8 @@ XYChart drawXYChart(String[][] xlsData) {
   coloursCat[5]  = ColourTable.getPresetColourTable(ColourTable.DARK2_8);
   coloursCat[6]  = ColourTable.getPresetColourTable(ColourTable.PAIRED_12);
   coloursCat[7]  = ColourTable.getPresetColourTable(ColourTable.ACCENT_8);
-  for (int i=hdrFlag; i<sizeY; i++) { //<>//
-    yvalues[i-1] = Float.parseFloat(xlsData[4][i]);
+  for (int i=hdrFlag; i<sizeY; i++) {
+    yvalues[i-1] = Float.parseFloat(xlsData[colNum][i]);
     xvalues[i-1] = float(i);
     names = names.concat(xlsData[0][i]);
   }
@@ -71,11 +71,15 @@ XYChart drawXYChart(String[][] xlsData) {
   lineChart.setData(xvalues, yvalues);
   lineChart.showXAxis(true);
   lineChart.showYAxis(true);
-  lineChart.setLineColour(color(200, 80, 80, 100));
+  lineChart.setLineColour(color(20, 80, 200, 100));
   lineChart.setPointSize(5);
   lineChart.setLineWidth(2);
   lineChart.setXAxisLabel(names);
+  lineChart.setYAxisLabel(xlsData[colNum][0]);
   lineChart.setXFormat("");
+  lineChart.setAxisColour(255);
+  lineChart.setAxisLabelColour(255);
+  lineChart.setAxisValuesColour(255);
   //lineChart.transposeAxes(true);
   return lineChart;
 }
